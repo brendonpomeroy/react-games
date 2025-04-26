@@ -1,54 +1,55 @@
-# React + TypeScript + Vite
+# Games Repository
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the Games repository! 🎮 This is a collection of small, fun games, built with React and Tailwind CSS. The first game in this repo is Blackjack, and more games will be added as time goes on.
 
-Currently, two official plugins are available:
+## Current Games
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Blackjack
 
-## Expanding the ESLint configuration
+**Blackjack** is a popular card game where the goal is to have a hand value closest to 21 without going over.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+#### How to Play:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+The game starts with the player and dealer each receiving two cards.
+
+The player can choose to "Hit" (draw another card) or "Stand" (keep their current hand).
+
+The dealer will reveal cards, and if their total is over 21, the player wins.
+
+If both the player and dealer's totals are under 21, the one closest to 21 wins.
+
+## Getting Started
+
+To get started, clone the repository and install the dependencies:
+
+```bash
+cd games
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Then, run the app:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm start
 ```
+
+This will start the app at <http://localhost:3000>.
+
+## Tech Stack
+
+React: JavaScript library for building user interfaces.
+
+Tailwind CSS: Utility-first CSS framework to style the app.
+
+TypeScript: Superset of JavaScript for type safety.
+
+## Future Additions
+
+This repository is designed to grow over time with more small games! Feel free to submit issues or pull requests for any game ideas or improvements.
+
+### Planned Games
+
+- Tetris 🟩
+- Pong 🏓
+- Sudoku 🧩
+- Memory Match 🎴
