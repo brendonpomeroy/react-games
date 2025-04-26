@@ -1,7 +1,7 @@
 // components/BlackjackGame.tsx
 import React, { useEffect, useState } from 'react';
-import PlayingCardStack from './playing-card-stack';
-import { Button } from './button';
+import PlayingCardStack from '../playing-card-stack';
+import { Button } from './blackjack-button';
 
 const suits = ['♠', '♣', '♥', '♦'];
 const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
