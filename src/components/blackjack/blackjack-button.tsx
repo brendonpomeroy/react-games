@@ -21,7 +21,7 @@ export const Button = ({
     "hover:brightness-110 hover:scale-[1.04]",
     "before:absolute before:inset-0 before:rounded-full before:bg-white/20 before:opacity-0 hover:before:opacity-10 before:transition-all before:duration-300",
     "embossed-text", // Applies to all buttons
-    className
+    className,
   );
 
   const variants = {
@@ -29,21 +29,21 @@ export const Button = ({
       "bg-gradient-to-br from-[#ffe680] to-[#ffcc00]",
       "text-[#2c2c1e]",
       "ring-[#c9a100]",
-      "shadow-inner"
+      "shadow-inner",
     ),
 
     red: classNames(
       "bg-gradient-to-br from-[#8b0000] to-[#5a0000]",
       "text-[#f5cccc]",
       "ring-[#4d0000]",
-      "shadow-inner"
+      "shadow-inner",
     ),
 
     blue: classNames(
       "bg-gradient-to-br from-[#547dbf] to-[#1d3557]",
       "text-[#dceaff]",
       "ring-[#1a2a47]",
-      "shadow-inner"
+      "shadow-inner",
     ),
   };
 

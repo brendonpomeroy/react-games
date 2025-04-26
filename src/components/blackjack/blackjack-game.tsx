@@ -1,19 +1,43 @@
 // components/BlackjackGame.tsx
-import React, { useEffect, useState } from 'react';
-import PlayingCardStack from '../playing-card-stack';
-import { Button } from './blackjack-button';
+import { ReactNode, useEffect, useState } from "react";
+import PlayingCardStack from "../playing-card-stack";
+import { Button } from "./blackjack-button";
+import { useScores } from "../../services/scores/scores-hook";
+import { BLACKJACK_SCORES_KEY } from "../../constants";
+import { BlackJackScores, blackjackTransformer } from "./blackjack-scores";
+import { BlackjackStats } from "./blackjack-stats";
 
-const suits = ['♠', '♣', '♥', '♦'];
-const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+const suits = ["♠", "♣", "♥", "♦"];
+const values = [
+  "A",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "J",
+  "Q",
+  "K",
+];
 
 type Card = {
   suit: string;
   value: string;
 };
 
+const enum GameResult {
+  WIN = "You win!",
+  LOSE = "Dealer wins.",
+  PUSH = "Push.",
+}
+
 function getCardValue(value: string): number {
-  if (['K', 'Q', 'J'].includes(value)) return 10;
-  if (value === 'A') return 11;
+  if (["K", "Q", "J"].includes(value)) return 10;
+  if (value === "A") return 11;
   return parseInt(value);
 }
 
@@ -24,7 +48,7 @@ function calculateTotal(hand: Card[]): number {
   for (const card of hand) {
     const val = getCardValue(card.value);
     total += val;
-    if (card.value === 'A') aces += 1;
+    if (card.value === "A") aces += 1;
   }
 
   while (total > 21 && aces > 0) {
@@ -45,12 +69,13 @@ function getNewDeck(): Card[] {
   return deck.sort(() => Math.random() - 0.5);
 }
 
-const BlackjackGame: React.FC = () => {
+const BlackjackGame: () => ReactNode = () => {
+  const scores = useScores();
   const [deck, setDeck] = useState<Card[]>([]);
   const [playerHand, setPlayerHand] = useState<Card[]>([]);
   const [dealerHand, setDealerHand] = useState<Card[]>([]);
   const [gameOver, setGameOver] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     startNewGame();
@@ -64,7 +89,7 @@ const BlackjackGame: React.FC = () => {
     setPlayerHand(player);
     setDealerHand(dealer);
     setGameOver(false);
-    setMessage('');
+    setMessage("");
   };
 
   const hit = () => {
@@ -75,8 +100,8 @@ const BlackjackGame: React.FC = () => {
     setPlayerHand(newHand);
 
     if (calculateTotal(newHand) > 21) {
-      setMessage('Bust! Dealer wins.');
-      setGameOver(true);
+      setMessage("Bust! Dealer wins.");
+      determineGameOutcome();
     }
   };
 
@@ -86,55 +111,77 @@ const BlackjackGame: React.FC = () => {
       dealer.push(deck.pop()!);
     }
 
-    const playerTotal = calculateTotal(playerHand);
-    const dealerTotal = calculateTotal(dealer);
+    setDealerHand(dealer);
 
-    let result = '';
+    determineGameOutcome();
+  };
+
+  const determineGameOutcome = () => {
+    const playerTotal = calculateTotal(playerHand);
+    const dealerTotal = calculateTotal(dealerHand);
+
+    const currentScores = scores.get<BlackJackScores>(
+      BLACKJACK_SCORES_KEY,
+      blackjackTransformer,
+    );
+
+    let result: GameResult | null = null;
     if (dealerTotal > 21 || playerTotal > dealerTotal) {
-      result = 'You win!';
+      result = GameResult.WIN;
+      scores.update(BLACKJACK_SCORES_KEY, { wins: currentScores.wins + 1 });
     } else if (playerTotal < dealerTotal) {
-      result = 'Dealer wins.';
+      console.log("updating with loss");
+      result = GameResult.LOSE;
+      scores.update(BLACKJACK_SCORES_KEY, { losses: currentScores.losses + 1 });
     } else {
-      result = 'Push.';
+      result = GameResult.PUSH;
+      scores.update(BLACKJACK_SCORES_KEY, { draws: currentScores.draws + 1 });
     }
 
-    setDealerHand(dealer);
     setMessage(result);
     setGameOver(true);
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#0b3d2e]">
-    <div className="p-4 max-w-xl mx-4 bg-[#14532d] text-white rounded-xl shadow-lg w-full">
-      <h1 className="text-3xl font-bold mb-6 text-center">♠ Blackjack ♠</h1>
+      <div className="p-4 max-w-xl mx-4 bg-[#14532d] text-white rounded-xl shadow-lg w-full">
+        <h1 className="text-3xl font-bold mb-6 text-center">♠ Blackjack ♠</h1>
 
-      <div className="mb-4">
-        <p className="font-semibold">Your Hand ({calculateTotal(playerHand)}):</p>
-        <PlayingCardStack cards={playerHand} />
-      </div>
-
-      <div className="mb-4">
-        <p className="font-semibold">Dealer's Hand ({gameOver ? calculateTotal(dealerHand) : '??'}):</p>
-        <PlayingCardStack cards={dealerHand} />
-      </div>
-
-      {!gameOver && (
-        <div className="space-x-3 mt-4">
-          <Button variant='gold' onClick={hit}>
-            Hit
-          </Button>
-          <Button variant='red' onClick={stand}>
-            Stand
-          </Button>
+        <div className="mb-4">
+          <p className="font-semibold">
+            Your Hand ({calculateTotal(playerHand)}):
+          </p>
+          <PlayingCardStack cards={playerHand} />
         </div>
-      )}
 
-      {message && <p className="mt-4 text-lg">{message}</p>}
+        <div className="mb-4">
+          <p className="font-semibold">
+            Dealer's Hand ({gameOver ? calculateTotal(dealerHand) : "??"}):
+          </p>
+          <PlayingCardStack cards={dealerHand} />
+        </div>
 
-      {gameOver && (<Button variant='blue' onClick={startNewGame}>
-        New Game
-      </Button>)}
-    </div>
+        {!gameOver && (
+          <div className="space-x-3 mt-4">
+            <Button variant="gold" onClick={hit}>
+              Hit
+            </Button>
+            <Button variant="red" onClick={stand}>
+              Stand
+            </Button>
+          </div>
+        )}
+
+        {message && <p className="mt-4 text-lg">{message}</p>}
+
+        {gameOver && (
+          <Button variant="blue" onClick={startNewGame}>
+            New Game
+          </Button>
+        )}
+
+        <BlackjackStats />
+      </div>
     </div>
   );
 };

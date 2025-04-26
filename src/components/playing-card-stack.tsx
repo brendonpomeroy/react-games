@@ -1,7 +1,6 @@
-
 // components/CardStack.tsx
-import React from 'react';
-import PlayingCard from './playing-card';
+import React from "react";
+import PlayingCard from "./playing-card";
 
 type PlayingCardData = {
   value: string;

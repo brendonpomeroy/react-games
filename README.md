@@ -8,7 +8,7 @@ Welcome to the Games repository! 🎮 This is a collection of small, fun games, 
 
 **Blackjack** is a popular card game where the goal is to have a hand value closest to 21 without going over.
 
-#### How to Play:
+#### How to Play
 
 The game starts with the player and dealer each receiving two cards.
 
