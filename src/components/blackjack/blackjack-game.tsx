@@ -81,6 +81,29 @@ const BlackjackGame: () => ReactNode = () => {
     startNewGame();
   }, []);
 
+  const updateScores = (result: GameResult) => {
+    const currentScores: BlackJackScores = scores.get<BlackJackScores>(
+      BLACKJACK_SCORES_KEY,
+      blackjackTransformer,
+    );
+    if (result === GameResult.WIN) {
+      scores.update(BLACKJACK_SCORES_KEY, {
+        ...currentScores,
+        wins: currentScores.wins + 1,
+      });
+    } else if (result === GameResult.LOSE) {
+      scores.update(BLACKJACK_SCORES_KEY, {
+        ...currentScores,
+        losses: currentScores.losses + 1,
+      });
+    } else if (result === GameResult.PUSH) {
+      scores.update(BLACKJACK_SCORES_KEY, {
+        ...currentScores,
+        pushes: currentScores.draws + 1,
+      });
+    }
+  };
+
   const startNewGame = () => {
     const newDeck = getNewDeck();
     const player = [newDeck.pop()!, newDeck.pop()!];
@@ -100,8 +123,9 @@ const BlackjackGame: () => ReactNode = () => {
     setPlayerHand(newHand);
 
     if (calculateTotal(newHand) > 21) {
-      setMessage("Bust! Dealer wins.");
-      determineGameOutcome();
+      setMessage("You busted!");
+      updateScores(GameResult.LOSE);
+      setGameOver(true);
     }
   };
 
@@ -113,32 +137,18 @@ const BlackjackGame: () => ReactNode = () => {
 
     setDealerHand(dealer);
 
-    determineGameOutcome();
-  };
-
-  const determineGameOutcome = () => {
     const playerTotal = calculateTotal(playerHand);
-    const dealerTotal = calculateTotal(dealerHand);
-
-    const currentScores = scores.get<BlackJackScores>(
-      BLACKJACK_SCORES_KEY,
-      blackjackTransformer,
-    );
-
-    let result: GameResult | null = null;
+    const dealerTotal = calculateTotal(dealer);
     if (dealerTotal > 21 || playerTotal > dealerTotal) {
-      result = GameResult.WIN;
-      scores.update(BLACKJACK_SCORES_KEY, { wins: currentScores.wins + 1 });
+      setMessage("You win!");
+      updateScores(GameResult.WIN);
     } else if (playerTotal < dealerTotal) {
-      console.log("updating with loss");
-      result = GameResult.LOSE;
-      scores.update(BLACKJACK_SCORES_KEY, { losses: currentScores.losses + 1 });
+      setMessage("Dealer wins.");
+      updateScores(GameResult.LOSE);
     } else {
-      result = GameResult.PUSH;
-      scores.update(BLACKJACK_SCORES_KEY, { draws: currentScores.draws + 1 });
+      setMessage("Push.");
+      updateScores(GameResult.PUSH);
     }
-
-    setMessage(result);
     setGameOver(true);
   };
 
