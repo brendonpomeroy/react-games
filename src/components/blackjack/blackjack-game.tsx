@@ -144,8 +144,10 @@ const BlackjackGame: () => ReactNode = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#0b3d2e]">
-      <div className="p-4 max-w-xl mx-4 bg-[#14532d] text-white rounded-xl shadow-lg w-full">
-        <h1 className="text-3xl font-bold mb-6 text-center">♠ Blackjack ♠</h1>
+      <div className="p-4 max-w-xl mx-4 bg-[#14532d] rounded-xl shadow-lg w-full text-white/60">
+        <h1 className="text-3xl font-bold mb-6 text-center text-black/40">
+          ♠ Blackjack ♠
+        </h1>
 
         <div className="mb-4">
           <p className="font-semibold">

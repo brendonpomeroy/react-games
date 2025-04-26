@@ -13,15 +13,15 @@ export const BlackjackStats: () => ReactNode = () => {
 
   return (
     <div className="bg-green-950/70 text-gold border border-green-950 rounded-xl px-4 py-2 w-full max-w-sm mx-auto mt-4 shadow-lg">
-      <div className="space-y-1 text-lg text-center font-mono flex flex-row justify-between items-center">
+      <div className="space-y-1 text-lg text-center font-mono flex flex-row justify-evenly items-center text-white/40">
         <div>
-          <span className="text-green-300">Wins:</span> {wins}
+          <span>Wins:</span> {wins}
         </div>
         <div>
-          <span className="text-red-400">Losses:</span> {losses}
+          <span>Losses:</span> {losses}
         </div>
         <div>
-          <span className="text-yellow-300">Draws:</span> {draws}
+          <span>Draws:</span> {draws}
         </div>
       </div>
     </div>
